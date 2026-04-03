@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setzio Pets — Coming Soon</title>
+<meta name="description" content="The booking platform built for pet care professionals. Join the waitlist.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EC;
+    --cream2: #F5ECD8;
+    --terra: #C4623A;
+    --terra2: #A84E2A;
+    --sage: #6B8F6E;
+    --sage2: #4E6B51;
+    --brown: #7A5230;
+    --text: #2C1810;
+    --text2: #6B4C36;
+    --text3: #9E7A60;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* Decorative blobs */
+  .blob1 {
+    position: fixed;
+    top: -120px;
+    right: -80px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196,98,58,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .blob2 {
+    position: fixed;
+    bottom: -100px;
+    left: -60px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(107,143,110,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+
+  /* Header */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 64px;
+    animation: fadeUp .6s ease both;
+  }
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--terra);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .logo-text span { color: var(--terra); }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--terra);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    animation: fadeUp .6s .1s ease both;
+  }
+
+  /* Hero text */
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 8vw, 84px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    text-align: center;
+    max-width: 720px;
+    margin-bottom: 24px;
+    animation: fadeUp .6s .2s ease both;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--terra);
+  }
+
+  .subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text2);
+    text-align: center;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    animation: fadeUp .6s .3s ease both;
+  }
+
+  /* Feature pills */
+  .pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 52px;
+    animation: fadeUp .6s .35s ease both;
+  }
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1.5px solid var(--cream2);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+  }
+
+  /* Form */
+  .form-wrap {
+    width: 100%;
+    max-width: 440px;
+    animation: fadeUp .6s .4s ease both;
+  }
+  .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .form-row {
+    display: flex;
+    gap: 8px;
+  }
+  .form-input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-family: 'Nunito', sans-serif;
+    background: #fff;
+    border: 1.5px solid var(--cream2);
+    border-radius: 12px;
+    color: var(--text);
+    outline: none;
+    transition: border-color .2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .form-input:focus { border-color: var(--terra); }
+  .form-input::placeholder { color: var(--text3); }
+  .form-btn {
+    padding: 14px 24px;
+    background: var(--terra);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s, transform .1s;
+    box-shadow: 0 4px 14px rgba(196,98,58,0.3);
+  }
+  .form-btn:hover { background: var(--terra2); }
+  .form-btn:active { transform: scale(0.97); }
+  .form-note {
+    font-size: 12px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  /* Success state */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 24px;
+    background: #fff;
+    border: 1.5px solid rgba(107,143,110,0.3);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .success.show { display: block; }
+  .success-icon { font-size: 36px; margin-bottom: 12px; }
+  .success h3 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .success p { font-size: 14px; color: var(--text2); }
+
+  /* Footer */
+  .footer {
+    margin-top: 72px;
+    text-align: center;
+    animation: fadeUp .6s .5s ease both;
+  }
+  .footer p {
+    font-size: 13px;
+    color: var(--text3);
+  }
+  .footer a {
+    color: var(--terra);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* Paw prints decoration */
+  .paws {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    font-size: 28px;
+    opacity: 0.15;
+    transform: rotate(15deg);
+    pointer-events: none;
+    letter-spacing: -4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .form-row { flex-direction: column; }
+    .pills { gap: 6px; }
+    .pill { font-size: 12px; padding: 6px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob1"></div>
+<div class="blob2"></div>
+<div class="paws">🐾🐾🐾</div>
+
+<div class="page">
+
+  <div class="logo">
+    <div class="logo-icon">🐾</div>
+    <div class="logo-text">Setzio<span>Pets</span></div>
+  </div>
+
+  <div class="badge">🌿 Coming Soon</div>
+
+  <h1>The platform <em>built</em><br>for pet care pros</h1>
+
+  <p class="subtitle">
+    Booking, staff management, and client care — designed specifically for groomers, trainers, vets, and daycares. No more WhatsApp chaos.
+  </p>
+
+  <div class="pills">
+    <div class="pill"><div class="pill-dot"></div>Pet profiles & history</div>
+    <div class="pill"><div class="pill-dot"></div>Vaccination tracking</div>
+    <div class="pill"><div class="pill-dot"></div>Multi-pet booking</div>
+    <div class="pill"><div class="pill-dot"></div>Breed-based pricing</div>
+    <div class="pill"><div class="pill-dot"></div>Daycare check-in/out</div>
+  </div>
+
+  <div class="form-wrap">
+    <label class="form-label">Join the waitlist — be first to know</label>
+    <div id="form-container">
+      <form id="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-row">
+          <input class="form-input" type="email" name="email" placeholder="your@email.com" required>
+          <button class="form-btn" type="submit">Notify me</button>
+        </div>
+        <p class="form-note">No spam, ever. Just one email when we launch. 🐾</p>
+      </form>
+    </div>
+    <div class="success" id="success-msg">
+      <div class="success-icon">🐾</div>
+      <h3>You're on the list!</h3>
+      <p>We'll let you know the moment Setzio Pets launches. Your furry clients deserve the best.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>A product by <a href="https://setzio.com">Setzio</a> · Building the future of service businesses</p>
+  </div>
+
+</div>
+
+<script>
+document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+  e.preventDefault()
+  const btn = this.querySelector('button')
+  btn.textContent = 'Joining...'
+  btn.disabled = true
+  try {
+    await fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    })
+  } catch(err) {}
+  document.getElementById('form-container').style.display = 'none'
+  document.getElementById('success-msg').classList.add('show')
+})
+</script>
+</body>
+</html>
