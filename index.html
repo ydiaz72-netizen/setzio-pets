@@ -726,11 +726,18 @@ footer a { font-size: 13px; color: var(--teal); text-decoration: none; }
 </footer>
 
 <script>
-  // ─── SUPABASE CONFIG ───────────────────────────────────────────────────────
-  // Get your anon key from: Supabase → Settings → API → anon public
   const SUPABASE_URL = 'https://dgkcmyyafzhbtzdvtvji.supabase.co'
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRna2NteXlhZnpoYnR6ZHZ0dmppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTEzMjcsImV4cCI6MjA5MDE2NzMyN30.itt1fnbd8gcPKKDmTmdsaoi2e5yzXoNwDnzR8jD3q9M'
-  // ──────────────────────────────────────────────────────────────────────────
+
+  async function getCountry() {
+    try {
+      const res = await fetch('https://ipapi.co/json/')
+      const data = await res.json()
+      return data.country_name || null
+    } catch {
+      return null
+    }
+  }
 
   async function submitWaitlist(source) {
     const emailId = source === 'hero' ? 'hero-email' : 'bottom-email'
@@ -740,7 +747,6 @@ footer a { font-size: 13px; color: var(--teal); text-decoration: none; }
 
     const input = document.getElementById(emailId)
     const btn   = document.getElementById(btnId)
-
     const email = (input.value || '').trim()
 
     if (!email.includes('@') || !email.includes('.')) {
@@ -757,6 +763,8 @@ footer a { font-size: 13px; color: var(--teal); text-decoration: none; }
     btn.disabled = true
     input.disabled = true
 
+    const country = await getCountry()
+
     try {
       const res = await fetch(SUPABASE_URL + '/rest/v1/marketing_waitlist', {
         method: 'POST',
@@ -766,19 +774,16 @@ footer a { font-size: 13px; color: var(--teal); text-decoration: none; }
           'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
           'Prefer': 'return=minimal'
         },
-        body: JSON.stringify({ email: email, market: 'us' })
+        body: JSON.stringify({ email, market: 'us', source: 'pets', country })
       })
 
-      // 201 = created, 409 = duplicate (already on list) — both are fine
       if (res.ok || res.status === 409) {
         document.getElementById(wrapId).style.display = 'none'
-        const succ = document.getElementById(succId)
-        succ.style.display = 'flex'
+        document.getElementById(succId).style.display = 'flex'
       } else {
         throw new Error('Server error: ' + res.status)
       }
     } catch (err) {
-      console.error('Waitlist error:', err)
       btn.textContent = 'Try again'
       btn.disabled = false
       input.disabled = false
@@ -787,11 +792,9 @@ footer a { font-size: 13px; color: var(--teal); text-decoration: none; }
     }
   }
 
-  // ─── FLOATING PAWS ────────────────────────────────────────────────────────
   const pawContainer = document.getElementById('paws')
   const pawEmojis = ['🐾', '🐕', '🐈', '🐾', '🐾']
   const count = 12
-
   for (let i = 0; i < count; i++) {
     const el = document.createElement('span')
     el.className = 'paw'
@@ -802,6 +805,8 @@ footer a { font-size: 13px; color: var(--teal); text-decoration: none; }
     el.style.animationDelay = (Math.random() * 20) + 's'
     pawContainer.appendChild(el)
   }
+
 </script>
+
 </body>
 </html>
